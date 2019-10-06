@@ -18,6 +18,15 @@ class TimeUtils @Inject constructor() {
         val fractionalMinute = fractionalHours * 60 - minute
         val seconds = (fractionalMinute * 60).toInt()
 
+        return getProperElapsedString(day, hours, minute, seconds)
+    }
+
+    fun getProperElapsedString(
+        day: Int,
+        hours: Int,
+        minute: Int,
+        seconds: Int
+    ): String {
         return when {
             day > 2 -> String.format("%s days ago", day)
             day > 1 -> when {
