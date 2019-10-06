@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="mapPoint"
+            type="com.jairrab.domain.model.MapPoint" />
+
+        <variable
+            name="viewModel"
+            type="com.jairrab.presentation.MapControllerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{()->viewModel.onListItemClicked(mapPoint)}"
+        android:paddingStart="16dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="0dp">
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{mapPoint.name}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/latitude_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Paris" />
+
+        <TextView
+            android:id="@+id/latitude_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(mapPoint.latitude)}"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/longitude_tv"
+            app:layout_constraintTop_toBottomOf="@id/name_tv"
+            tools:text="45" />
+
+        <TextView
+            android:id="@+id/longitude_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(mapPoint.longitude)}"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/description_tv"
+            app:layout_constraintTop_toBottomOf="@id/latitude_tv"
+            tools:text="145" />
+
+        <TextView
+            android:id="@+id/description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{mapPoint.description}"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/longitude_tv"
+            tools:text="Location of Eiffel Tower" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

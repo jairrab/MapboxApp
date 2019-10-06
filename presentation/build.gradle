@@ -1,0 +1,58 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlinx-serialization'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha05'
+
+    implementation 'javax.inject:javax.inject:1'
+
+    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.4.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v8:0.3.0'
+
+    //Kotlin Json Serializer
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1"
+
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation 'androidx.test:core:1.2.0'
+
+    implementation project(':Domain')
+}
