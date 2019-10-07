@@ -48,6 +48,9 @@ The app adopts principles of reactive programming through use of *observables* a
 
 # Libraries Used
 
+## Mapbox SDK
+Used to download street maps, feature information for the user's current location and plotting a list of geolocation information inside the map.
+
 ## Dagger 2
 The app use Dagger with *AndroidInjector* module for dependency injection. The app module is responsible for the concrete creation of the Dagger objects outside of their own modules. As a general practice, all dependencies are injected into classes, and object creation inside classes are avoided. This loose coupling approach also helps improve the testability of the app.
 
@@ -74,7 +77,7 @@ RxJava is used extensively for composing asynchronous calls to the remote/local 
 * notify the UI observers when the information is readily available, or an error has been detected
 
 The code below illustrates how RxJava observables are chained to implement the flow described above.
-```
+```kotlin
 override fun getMapPoints(): Observable<MapInformation> {
         return dataStore.getRemoteData(true).getMapPoints()
             .map { list ->
@@ -115,6 +118,8 @@ override fun getMapPoints(): Observable<MapInformation> {
             .flatMap { it }
     }
 ```
+## Unit Testing
+JUnit4, Mockito, Room-in-memory testing was used for tests included. For example, to unit test the RXJava call above, the data repositories are mocked using Mockito. Due to dependency injection, there are very loose coupling between classes which makes it very suitable for comprehensive unit testing coverage.
 ## LeakCanary
 LeakCanary was used to detect and anticipate potential memory leaks. The app yielded 0% memory leaks through extensive debug testing.
 ## Android Jetpack
@@ -122,7 +127,7 @@ Jetpack is a suite of libraries, tools, and guidance to help developers write hi
 ### Room Library
 The app uses Room Library (Jetpack) to store and access SQLite database information on the device. SQLite is being used to cache the map information information- which will be accessed when the device cannot connect to the network to obtain map information.
 ### Data Binding
-Used to bind observable data to UI elements directly in the XML layouts, minimizing boilerplate code in the fragments or activities employing them. It also eliminates the need to setup click listener callbacks in some casses, such as when passing click events and data binding variables to receiving methods, such as `mapInfo` embeded on the RecyclerView `viewholders`.
+Data binding is leveraged heavily. It was used to bind observable data to UI elements directly in the XML layouts, minimizing boilerplate code in the fragments or activities employing them. It also eliminates the need to setup click listener callbacks in some casses, such as when passing click events and data binding variables to receiving methods, such as `mapInfo` embeded on the RecyclerView `viewholders`.
 ### Lifecycle-Aware Components
 Helped keep UI controllers (activities and fragments) as lean as possible. For instance, the MapBox library which is heavily reliant on lifecycle states (`onCreate`, `onStart`, `onDestroy`, etc.) was able to employ the use of lifecycle observers allowing them to be cleanly separated on its own.
 ### ViewModel
@@ -131,5 +136,8 @@ Helps decouple the control logic from the UI elements in a lifecycle conscious w
 It helped in supporting the reactive programming approach that supported the clean architecture design of the app. The live data was used as *observables* that notifies its *observers* (view elements) when something needs to be updated.
 ### Navigation
 Specifically navigation graph was used to place content inside the main container, called a `NavHost`. The app only has a single view, but as more views are added, a 'NavController' can be used to orchestrate the swapping content in the `NavHost`.
+## Other Libraries used
+* Kotlin Coroutines
+* Kotlin Serialization
 
 
