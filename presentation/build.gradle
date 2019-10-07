@@ -5,13 +5,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -30,29 +30,28 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompat_version"
+    implementation "androidx.core:core-ktx:$rootProject.ktx_version"
+    testImplementation "junit:junit:$rootProject.junit_version"
+    androidTestImplementation "androidx.test:runner:$rootProject.androidx_test_runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espresso_version"
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha05'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewmodel_version"
 
-    implementation 'javax.inject:javax.inject:1'
+    implementation "javax.inject:javax.inject:$rootProject.javax_inject_version"
 
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlin_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava_version"
 
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.4.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v8:0.3.0'
+    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapbox_version"
 
     //Kotlin Json Serializer
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$rootProject.kotlin_serialization_version"
 
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
-    testImplementation "android.arch.core:core-testing:1.1.1"
-    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$rootProject.mockito_kotlin_version"
+    testImplementation "android.arch.core:core-testing:$rootProject.android_arch_core_testing_version"
+    testImplementation "androidx.test:core:$rootProject.androidx_core_testing_version"
 
     implementation project(':Domain')
 }

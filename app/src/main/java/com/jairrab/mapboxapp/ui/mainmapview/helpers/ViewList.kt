@@ -18,11 +18,12 @@ internal class ViewList @Inject constructor(
         recyclerView.adapter = recyclerAdapter
     }
 
-    fun updateRecyclerView(recyclerView: RecyclerView) {
-        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-        recyclerAdapter.notifyItemRangeChanged(
-            layoutManager.findFirstVisibleItemPosition(),
-            layoutManager.findLastVisibleItemPosition()
-        )
+    fun updateRecyclerView(recyclerView: RecyclerView?) {
+        (recyclerView?.layoutManager as? LinearLayoutManager)?.let {
+            recyclerAdapter.notifyItemRangeChanged(
+                it.findFirstVisibleItemPosition(),
+                it.findLastVisibleItemPosition()
+            )
+        }
     }
 }

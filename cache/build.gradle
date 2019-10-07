@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -29,27 +29,27 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompat_version"
+    implementation "androidx.core:core-ktx:$rootProject.ktx_version"
+    testImplementation "junit:junit:$rootProject.junit_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espresso_version"
 
-    api "androidx.room:room-runtime:2.2.0-rc01" //see https://stackoverflow.com/a/55258780/7960756
-    implementation 'androidx.room:room-rxjava2:2.2.0-rc01'
-    kapt "androidx.room:room-compiler:2.2.0-rc01"
+    api "androidx.room:room-runtime:$rootProject.room_version" //see https://stackoverflow.com/a/55258780/7960756
+    implementation "androidx.room:room-rxjava2:$rootProject.room_version"
+    kapt "androidx.room:room-compiler:$rootProject.room_version"
 
-    implementation 'javax.inject:javax.inject:1'
+    implementation "javax.inject:javax.inject:$rootProject.javax_inject_version"
 
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlin_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava_version"
 
     implementation project(':Data')
 
-    testImplementation "org.robolectric:robolectric:4.3"
-    testImplementation "android.arch.core:core-testing:1.1.1"
-    testImplementation 'androidx.test:core:1.2.0'
-    testImplementation 'androidx.test.ext:junit:1.1.1'
+    //testImplementation "org.robolectric:robolectric:4.3"
+    testImplementation "android.arch.core:core-testing:$rootProject.android_arch_core_testing_version"
+    testImplementation "androidx.test:core:$rootProject.androidx_core_testing_version"
+    testImplementation "androidx.test.ext:junit:$rootProject.androidx_junit_version"
 
 }

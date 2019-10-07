@@ -27,7 +27,6 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
@@ -45,14 +44,11 @@ internal class ViewMap @Inject constructor(
 ) : LifecycleObserver {
 
     private var weakMapView: WeakReference<MapView?>? = null
-    private var markerViewManager: MarkerViewManager? = null
 
     fun setup(mapView: MapView?, callback: (MapboxMap) -> Unit) {
         weakMapView = WeakReference(mapView)
 
         mapView?.getMapAsync { mapboxMap ->
-            markerViewManager = MarkerViewManager(mapView, mapboxMap)
-
             mapboxMap.setStyle(Style.MAPBOX_STREETS) {
                 callback(mapboxMap)
             }
@@ -97,10 +93,7 @@ internal class ViewMap @Inject constructor(
             Lifecycle.Event.ON_RESUME  -> mapView?.onResume()
             Lifecycle.Event.ON_PAUSE   -> mapView?.onPause()
             Lifecycle.Event.ON_STOP    -> mapView?.onStop()
-            Lifecycle.Event.ON_DESTROY -> {
-                mapView?.onDestroy()
-                markerViewManager?.onDestroy()
-            }
+            Lifecycle.Event.ON_DESTROY -> mapView?.onDestroy()
         }
     }
 
@@ -173,7 +166,7 @@ internal class ViewMap @Inject constructor(
                 toaster.showToast(
                     "$description\n" +
                             "Coordinates: $latitude:$longitude" +
-                            (distance?.let { "\n$it from current location" }?:"")
+                            (distance?.let { "\n$it from current location" } ?: "")
                 )
             }
             true
