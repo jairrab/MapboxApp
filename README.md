@@ -140,4 +140,43 @@ Specifically navigation graph was used to place content inside the main containe
 * Kotlin Coroutines
 * Kotlin Serialization
 
+# Dependencies setup
+Multiple libraries are used in this app. To mantain consistency and coherence, a single source of library versions is used and is contained in the projects `build.gradle` file. Also, since this app uses a multi-module architecture, it ensures that when a library updates, all modules using the same library are updated to thelatest version.
+
+```
+ ext{
+        //Android Libraries
+        appcompat_version = '1.1.0'
+        ktx_version = '1.1.0'
+        lifecycle_version = '2.1.0'
+        viewmodel_version = '2.2.0-alpha05'
+        room_version = '2.2.0-rc01'
+        constraint_layout_version = '1.1.3'
+        cardview_version = '1.0.0'
+        nav_fragment_version = '2.2.0-alpha03'
+
+        //3rd Party Libraries
+        javax_inject_version = '1'
+        dagger_version = '2.22.1'
+        retrofit_version = '2.6.0'
+        okhttp_version = '3.12.3'
+        rxandroid_version = '2.1.1'
+        rxkotlin_version = '2.3.0'
+        rxjava_version = '2.2.9'
+        leakcanary_version = '2.0-beta-3'
+        mapbox_version = '8.4.0'
+        mapbox_turf_version = '4.9.0'
+        kotlin_serialization_version = '0.11.1'
+
+        //Test Libraries
+        junit_version = '4.12'
+        androidx_test_runner_version = '1.2.0'
+        espresso_version = '3.2.0'
+        mockito_kotlin_version = '2.1.0'
+```
+
+# References
+* Mapbox Android SDK: https://docs.mapbox.com/android/maps/overview/
+* Clean Architecture: https://proandroiddev.com/how-to-implement-a-clean-architecture-on-android-2e5e8c8e81fe
+* Guide to App Architecture: https://developer.android.com/jetpack/docs/guide
 
