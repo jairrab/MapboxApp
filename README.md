@@ -15,17 +15,17 @@ The app requirements are very basic, but my objective is not to come up with the
 ![alt text](resources/images/app_screenshots.png)
 
 * When the app is opened for the first time, it will ask the user to provide access to *location permission request*. This is required to detect and display the user's current location.
-* If a user grants permission, the app navigates to the user's current location. It will query the Mapbox API for the closest name of the current location (*screenshot A*).
+* If a user grants permission, the app navigates to the user's current location. It will query the Mapbox API for the closest name of the current location (`screenshot A`).
 * The app downloads map geo information in JSON format from the internet.
 * The app stores this information on the local phone database for cache purposes.
 * The app also stores a timestamp of when this information was saved.
-* The geo information is displayed as a list inside a `bottomsheet` slider panel, shown with its distance/bearing to your current location. It is collapsed by default but can be expanded by sliding up (*screenshot B*)
+* The geo information is displayed as a list inside a `bottomsheet` slider panel, shown with its distance/bearing to your current location. It is collapsed by default but can be expanded by sliding up (`screenshot B`)
 * The geo list is also displayed in the Map using *location pin* icons with a text underneath that shows the item name.
 * Clicking on an item list causes the map to navigate to the item location.
-* Clicking on a pin icon shows the pin's description, GPS coordinates, and distance/bearing from your current location (*screenshot D*).
+* Clicking on a pin icon shows the pin's description, GPS coordinates, and distance/bearing from your current location (`screenshot D`).
 * Clicking on the GPS icon navigates the user back to his current location on the map. The user's coordinate is also presented.
 * If the user opened the app and it failed to download geo information, the app will check it's local database for the most recent information and use it instead to display the table and map information described previously.
-* It will also display how much time has elapsed since the cached information was saved (*screenshot C*).
+* It will also display how much time has elapsed since the cached information was saved (`screenshot C`).
 * The app handles orientation changes gracefully, using `ViewModel` to retain states.
 
 # App Architecture
