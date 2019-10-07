@@ -50,6 +50,7 @@ dependencies {
 
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.4.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v8:0.3.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:4.9.0'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 

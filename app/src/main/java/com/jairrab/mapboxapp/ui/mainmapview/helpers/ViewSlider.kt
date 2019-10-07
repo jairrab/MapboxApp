@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
-class ViewSlider @Inject constructor(
+internal class ViewSlider @Inject constructor(
 ) {
 
     private var weakSheetBehavior: WeakReference<BottomSheetBehavior<ViewGroup>?>? = null

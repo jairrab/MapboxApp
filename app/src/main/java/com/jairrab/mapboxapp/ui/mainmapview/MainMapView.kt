@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class MainMapView : BaseFragment() {
 
-    @Inject lateinit var helper: ViewHelper
+    @Inject internal lateinit var helper: ViewHelper
     @Inject lateinit var viewModel: MapControllerViewModel
 
     private lateinit var binding: MyFragmentBinding

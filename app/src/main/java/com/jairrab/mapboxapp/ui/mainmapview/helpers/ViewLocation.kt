@@ -20,7 +20,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class ViewLocation @Inject constructor(
+internal class ViewLocation @Inject constructor(
     private val viewModel: MapControllerViewModel,
     private val toaster: Toaster,
     private val permissionsUtil: PermissionsUtil,

@@ -15,6 +15,7 @@ import com.jairrab.domain.model.MapInformation
 import com.jairrab.domain.model.MapPoint
 import com.jairrab.domain.model.Source
 import com.jairrab.mapboxapp.R
+import com.jairrab.mapboxapp.ui.mainmapview.helpers.distance.DistanceUtils
 import com.jairrab.mapboxapp.ui.mainmapview.mapper.Mapper
 import com.jairrab.mapboxapp.ui.utils.TimeUtils
 import com.jairrab.mapboxapp.ui.utils.Toaster
@@ -35,9 +36,10 @@ import kotlinx.coroutines.delay
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class ViewMap @Inject constructor(
+internal class ViewMap @Inject constructor(
     private val viewModel: MapControllerViewModel,
     private val timeUtils: TimeUtils,
+    private val distanceUtils: DistanceUtils,
     private val toaster: Toaster,
     private val mapper: Mapper
 ) : LifecycleObserver {
@@ -135,7 +137,7 @@ class ViewMap @Inject constructor(
             addImage(MARKER_ID, drawable)
 
             addSource(
-                GeoJsonSource(SOURCE_ID, mapper.mapT0FeatureCollections(points))
+                GeoJsonSource(SOURCE_ID, mapper.mapToFeatureCollections(points))
             )
 
             addLayer(SymbolLayer(LAYER_MARKER, SOURCE_ID).apply {
@@ -149,17 +151,30 @@ class ViewMap @Inject constructor(
             })
         }
 
-        mapboxMap?.addOnMapClickListener {
-            val screenPoint = mapboxMap.projection.toScreenLocation(it)
+        mapboxMap?.addOnMapClickListener { latLng ->
+            val screenPoint = mapboxMap.projection.toScreenLocation(latLng)
             val features = mapboxMap.queryRenderedFeatures(screenPoint, LAYER_MARKER)
+
             if (features.isNotEmpty()) {
                 val selectedFeature = features[0]
                 val description = selectedFeature.getStringProperty("description")
-                val latLong = (selectedFeature.geometry() as Point).coordinates()
-                val latitude = latLong[1]
-                val longitude = latLong[0]
-                toaster.showToast("$description\n${latitude.roundToNDecimal(5)} :" +
-                        " ${longitude.roundToNDecimal(5)}")
+                val point = selectedFeature.geometry() as Point
+                val latLong = point.coordinates()
+                val latitude = latLong[1].roundToNDecimal(5)
+                val longitude = latLong[0].roundToNDecimal(5)
+                val currentLocation = viewModel.currentLocationMarker.value
+                val distance = currentLocation?.let {
+                    distanceUtils.getDistanceMilesAndBearing(
+                        point1 = point,
+                        point2 = mapper.mapToPoint(currentLocation)
+                    )
+                }
+
+                toaster.showToast(
+                    "$description\n" +
+                            "Coordinates: $latitude:$longitude" +
+                            (distance?.let { "\n$it from current location" }?:"")
+                )
             }
             true
         }

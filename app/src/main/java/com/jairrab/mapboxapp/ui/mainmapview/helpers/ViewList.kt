@@ -6,7 +6,7 @@ import com.jairrab.domain.model.MapPoint
 import com.jairrab.mapboxapp.ui.mainmapview.helpers.adapter.RecyclerAdapter
 import javax.inject.Inject
 
-class ViewList @Inject constructor(
+internal class ViewList @Inject constructor(
     private val recyclerAdapter: RecyclerAdapter
 ) {
 

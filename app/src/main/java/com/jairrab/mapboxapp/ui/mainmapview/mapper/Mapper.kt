@@ -25,11 +25,15 @@ class Mapper @Inject constructor() {
         return LatLng(entity.latitude, entity.longitude)
     }
 
+    fun mapToPoint(location: Location): Point {
+        return Point.fromLngLat(location.longitude, location.latitude)
+    }
+
     fun mapToPoint(entity: MapPoint): Point {
         return Point.fromLngLat(entity.longitude, entity.latitude)
     }
 
-    fun mapT0FeatureCollections(points: List<MapPoint>): FeatureCollection {
+    fun mapToFeatureCollections(points: List<MapPoint>): FeatureCollection {
         return FeatureCollection.fromFeatures(points.map { getFeature(it) })
     }
 

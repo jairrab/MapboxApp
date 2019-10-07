@@ -6,10 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jairrab.domain.model.MapPoint
 import com.jairrab.mapboxapp.R
+import com.jairrab.mapboxapp.ui.mainmapview.helpers.distance.DistanceUtils
 import com.jairrab.presentation.MapControllerViewModel
 import javax.inject.Inject
 
-class RecyclerAdapter @Inject constructor(
+internal class RecyclerAdapter @Inject constructor(
+    private val distanceUtils: DistanceUtils,
     private val viewModel: MapControllerViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -21,6 +23,7 @@ class RecyclerAdapter @Inject constructor(
                 LayoutInflater.from(parent.context),
                 R.layout.item_view, parent, false
             ),
+            distanceUtils = distanceUtils,
             viewModel = viewModel
         )
     }
