@@ -53,9 +53,14 @@ class MainMapView : BaseFragment() {
                 helper.location.updateLocationMarker(it, mapboxMap)
             })
 
-            currentLocationStrip.observe(viewLifecycleOwner, Observer {
-                binding.currentLocationStripTv.text = it
-                binding.currentLocationStripTv.visibility = View.VISIBLE
+            currentLocationName.observe(viewLifecycleOwner, Observer {
+                binding.currentLocationNameTv.text = it
+                binding.currentLocationNameTv.visibility = View.VISIBLE
+            })
+
+            currentLocationGps.observe(viewLifecycleOwner, Observer {
+                binding.currentLocationGpsTv.text = it
+                binding.currentLocationGpsTv.visibility = View.VISIBLE
                 binding.currentLocationLabelTv.visibility = View.VISIBLE
             })
 

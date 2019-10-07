@@ -1,5 +1,6 @@
 package com.jairrab.data.store
 
+import com.jairrab.data.model.LocationQuery
 import com.jairrab.data.model.MapPointData
 import com.jairrab.data.repository.DataRepository
 import com.jairrab.data.repository.RemoteRepository
@@ -10,6 +11,10 @@ import javax.inject.Inject
 class RemoteDataStore @Inject constructor(
     private val remoteRepository: RemoteRepository
 ) : DataRepository {
+
+    override fun getLocationQuery(latitude: Double, longitude: Double): Observable<LocationQuery> {
+        return remoteRepository.getLocationQuery(latitude, longitude)
+    }
 
     override fun getMapPoints(): Observable<List<MapPointData>> {
         return remoteRepository.getMapPoints()

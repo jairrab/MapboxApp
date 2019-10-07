@@ -4,8 +4,10 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jairrab.domain.model.LocationFeature
 import com.jairrab.domain.model.MapInformation
 import com.jairrab.domain.model.MapPoint
+import com.jairrab.domain.usercases.GetLocationQuery
 import com.jairrab.domain.usercases.GetMapLocations
 import com.jairrab.presentation.eventobserver.Event
 import com.jairrab.presentation.utils.roundToNDecimal
@@ -14,17 +16,21 @@ import javax.inject.Inject
 
 
 class MapControllerViewModel @Inject constructor(
-    private val getMapLocations: GetMapLocations
+    private val getMapLocations: GetMapLocations,
+    private val getLocationQuery: GetLocationQuery
 ) : ViewModel() {
 
     private val _listItemClick = MutableLiveData<MapPoint>()
     val listItemClick: LiveData<MapPoint> = _listItemClick
 
+    private val _currentLocationName = MutableLiveData<String>()
+    val currentLocationName: LiveData<String> = _currentLocationName
+
     private val _currentLocationMarker = MutableLiveData<Location>()
     val currentLocationMarker: LiveData<Location> = _currentLocationMarker
 
-    private val _currentLocationStrip = MutableLiveData<String?>()
-    val currentLocationStrip: LiveData<String?> = _currentLocationStrip
+    private val _currentLocationGps = MutableLiveData<String?>()
+    val currentLocationGps: LiveData<String?> = _currentLocationGps
 
     private val _gpsFlasher = MutableLiveData<Event<MapPoint>>()
     val gpsFlasher: LiveData<Event<MapPoint>> = _gpsFlasher
@@ -50,7 +56,7 @@ class MapControllerViewModel @Inject constructor(
     }
 
     fun updateCurrentLocationStrip(location: Location?) {
-        _currentLocationStrip.value = (
+        _currentLocationGps.value = (
                 if (location != null) {
                     val lat = location.latitude.roundToNDecimal(4)
                     val long = location.longitude.roundToNDecimal(4)
@@ -86,9 +92,25 @@ class MapControllerViewModel @Inject constructor(
             }
 
             override fun onError(e: Throwable) {
-                println("^^ Error occurred: ${e.message}")
+                //not needed now, all errors are checked in data layer, intentionally left blank
             }
 
         })
+    }
+
+    fun getCurrentLocation(lastLocation: Location) {
+        getLocationQuery.execute(object : DisposableObserver<LocationFeature>() {
+            override fun onComplete() {
+            }
+
+            override fun onNext(t: LocationFeature) {
+                _currentLocationName.value = t.place_name
+            }
+
+            override fun onError(e: Throwable) {
+                //not needed now, all errors are checked in data layer, intentionally left blank
+            }
+
+        }, Pair(lastLocation.latitude, lastLocation.longitude))
     }
 }

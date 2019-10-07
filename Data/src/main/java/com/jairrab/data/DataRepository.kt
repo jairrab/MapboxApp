@@ -4,6 +4,7 @@ import com.jairrab.data.mapper.MapPointMapper
 import com.jairrab.data.model.MapPointData
 import com.jairrab.data.store.DataStore
 import com.jairrab.data.util.TimeUtils
+import com.jairrab.domain.model.LocationFeature
 import com.jairrab.domain.model.MapInformation
 import com.jairrab.domain.model.Source
 import com.jairrab.domain.repository.DomainRepository
@@ -55,5 +56,24 @@ class DataRepository @Inject constructor(
                     }
             }
             .flatMap { it }
+    }
+
+    override fun getCurrentLocation(latitude: Double, longitude: Double): Observable<LocationFeature> {
+        return dataStore.getRemoteData(true).getLocationQuery(latitude, longitude)
+            .map { it.features }
+            .map { it[0] }
+            .map {
+                LocationFeature(
+                    address = it.address,
+                    bbox = it.bbox,
+                    center = it.center,
+                    id = it.id,
+                    place_name = it.place_name,
+                    place_type = it.place_type,
+                    relevance = it.relevance,
+                    text = it.text,
+                    type = it.type
+                )
+            }
     }
 }

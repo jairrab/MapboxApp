@@ -1,5 +1,6 @@
 package com.jairrab.data.store
 
+import com.jairrab.data.model.LocationQuery
 import com.jairrab.data.model.MapPointData
 import com.jairrab.data.repository.CacheRepository
 import com.jairrab.data.repository.DataRepository
@@ -10,6 +11,10 @@ import javax.inject.Inject
 class CacheDataStore @Inject constructor(
     private val cacheRepository: CacheRepository
 ) : DataRepository {
+
+    override fun getLocationQuery(latitude: Double, longitude: Double): Observable<LocationQuery> {
+        throw IllegalStateException("Function not currently supported!")
+    }
 
     override fun getMapPoints(): Observable<List<MapPointData>> {
         return cacheRepository.getMapPoints()

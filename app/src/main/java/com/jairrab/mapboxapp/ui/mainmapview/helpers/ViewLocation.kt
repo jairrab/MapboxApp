@@ -84,6 +84,7 @@ internal class ViewLocation @Inject constructor(
             if (flyToLocation) {
                 flyToLocation = false
                 viewModel.updateLocationFlyer(lastLocation)
+                viewModel.getCurrentLocation(lastLocation)
             }
         }
     }

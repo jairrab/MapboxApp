@@ -1,6 +1,7 @@
 package com.jairrab.mapboxapp
 
 import com.jairrab.mapboxapp.di.DaggerAppComponent
+import com.jairrab.remote.api.Constants.MAPBOX_API
 import com.mapbox.mapboxsdk.Mapbox
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
@@ -11,10 +12,7 @@ class MyApp : DaggerApplication() {
         super.onCreate()
 
         // Mapbox Access token
-        Mapbox.getInstance(
-            applicationContext,
-            getString(R.string.mapbox_access_token)
-        );
+        Mapbox.getInstance(applicationContext, MAPBOX_API);
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

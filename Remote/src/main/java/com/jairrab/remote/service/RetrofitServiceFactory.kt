@@ -10,21 +10,39 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitServiceFactory {
 
-    fun makeRetrofitClient(isDebug: Boolean): RetrofitService {
+    fun makeRetrofitTestClient(isDebug: Boolean): RetrofitTestClient {
         val okHttpClient = makeOkHttpClient(
             makeLoggingInterceptor((isDebug))
         )
-        return makeRetrofitClient(okHttpClient, Gson())
+        return makeRetrofitTestClient(okHttpClient, Gson())
     }
 
-    private fun makeRetrofitClient(okHttpClient: OkHttpClient, gson: Gson): RetrofitService {
+    fun makeRetrofitMapbox(isDebug: Boolean): RetrofitMapbox {
+        val okHttpClient = makeOkHttpClient(
+            makeLoggingInterceptor((isDebug))
+        )
+        return makeRetrofitMapbox(okHttpClient, Gson())
+    }
+
+    private fun makeRetrofitTestClient(okHttpClient: OkHttpClient, gson: Gson): RetrofitTestClient {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://annetog.go" + "ten" + "na.com/development/scripts/")
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-        return retrofit.create(RetrofitService::class.java)
+        return retrofit.create(RetrofitTestClient::class.java)
+    }
+
+    private fun makeRetrofitMapbox(okHttpClient: OkHttpClient, gson: Gson): RetrofitMapbox {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.mapbox.com/geocoding/v5/")
+            .client(okHttpClient)
+
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        return retrofit.create(RetrofitMapbox::class.java)
     }
 
     private fun makeOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
