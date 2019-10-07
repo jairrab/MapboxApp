@@ -12,7 +12,7 @@ The app requirements are very basic, but my objective is not to come up with the
 
 # App Overview/Features
 
-![alt text](resources/images/app_layer_architecture.png)
+![alt text](resources/images/app_screenshots.png)
 
 * When the app is opened for the first time, it will ask the user to provide access to *location permission request*. This is required to detect and display the user's current location.
 * If a user grants permission, the app navigates to the user's current location. It will query the Mapbox API for the closest name of the current location (*screenshot A*).
@@ -29,6 +29,9 @@ The app requirements are very basic, but my objective is not to come up with the
 * The app handles orientation changes gracefully, using `ViewModel` to retain states.
 
 # App Architecture
+
+![alt text](resources/images/app_layer_architecture.png)
+
 The app architecture  is organized into several layers, namely the *presentation*, *domain*, and the *data* layers.
 
 * **Presentation**- contains the View and Presentation modules of the app. The view module contains the activities and fragments that are coordinated through the Presenter/ViewModel. I am using the Android ViewModel class (Android Jetpack) which  is designed to store and manage UI-related data in a lifecycle conscious way. This ViewModel class allows data to survive configuration changes such as screen rotations. This layer depends on the Domain layer.
