@@ -38,7 +38,6 @@ object RetrofitServiceFactory {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.mapbox.com/geocoding/v5/")
             .client(okHttpClient)
-
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
