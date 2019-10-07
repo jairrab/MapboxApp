@@ -52,7 +52,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid_version"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"
 
     implementation project(':presentation')
     implementation project(':Domain')
