@@ -1,24 +1,35 @@
 # Mapbox App
-A sample mobile app that implements a MapBox map
-* App will download an array of Pin data from a given *http* address that will be saved on a persistent storage.
-* Display the user’s location on the map.
-* Display the Pin data on the map.
-* Display the Pin data in a list.
+A sample Android app that implements a MapBox map using *Clean Archecture* principles with *MVVM* design pattern.
 # Technical Objectives
-The app requirements is very basic, but my objective is not to come up with the simplest/easiest implementation. Although seemingly over-engineered (and it is for this case), my objective was to design the app with a modern architecture that is scalable and flexible (future growth and requirements) and compliant with a team development setting. Thus, I have set the following goals for the app
-* Targeted towards the latest Android API (29) and Kotlin language version
-* Architecture Goals
-   * Adheres to *Clean Architecture* design principles
-   * Modular, scalable, flexible
-      * Multi-module design composed of independent modules that can be replaced with changing the entire system.
-      * For instance, the UI module  can be changed without affacting the business and data layers of the application
-      * Modules and classes with well defined responsibility and separation of concerns
-      * Highly testable
-* Utlizies the latest technology stack
-# App Architecture
-The app architecture  is organized into several layers, namely the *presentation*, *domain*, and the *data* layers.
+The app requirements are very basic, but my objective is not to come up with the simplest/easiest implementation. Although seemingly over-engineered (and it is for this case), my objective was to design it with a modern architecture that is very compliant with a team development setting. Thus, I have set the following goals for the app
+* Adheres to *Clean Architecture* design principles
+* Modular, scalable, flexible (adaptable to future growth and requirements)
+* Multi-module design composed of independent modules that can be replaced without changing the entire system.
+   * For instance, the UI module  can be changed without affacting the business and data layers of the application
+   * Modules and classes with well defined responsibility and separation of concerns
+* Highly testable
+* Uses the latest technology stack where applicable
+
+# App Overview/Features
 
 ![alt text](resources/images/app_layer_architecture.png)
+
+* When the app is opened for the first time, it will ask the user to provide access to *location permission request*. This is required to detect and display the user's current location.
+* If a user grants permission, the app navigates to the user's current location. It will query the Mapbox API for the closest name of the current location (*screenshot A*).
+* The app downloads map geo information in JSON format from the internet.
+* The app stores this information on the local phone database for cache purposes.
+* The app also stores a timestamp of when this information was saved.
+* The geo information is displayed as a list inside a bottomsheet slider, shown with its distance/bearing to your current location. It is collapsed by default but can be expanded by sliding up (*screenshot B*)
+* The geo list is also displayed in the Map using *location pin* icons with a text underneath that shows the item name.
+* Clicking on an item list causes the map to navigate to the item location.
+* Clicking on a pin icon shows the pin's description, GPS coordinates, and distance/bearing from your current location (*screenshot D*).
+* Clicking on the GPS icon navigates the user back to his current location on the map. The user's coordinate is also presented.
+* If the user opened the app and it failed to download geo information, the app will check it's local database for the most recent information and use it instead to display the table and map information described previously.
+* It will also display how much time has elapsed since the cached information was saved (*screenshot C*).
+* The app handles orientation changes gracefully, using `ViewModel` to retain states.
+
+# App Architecture
+The app architecture  is organized into several layers, namely the *presentation*, *domain*, and the *data* layers.
 
 * **Presentation**- contains the View and Presentation modules of the app. The view module contains the activities and fragments that are coordinated through the Presenter/ViewModel. I am using the Android ViewModel class (Android Jetpack) which  is designed to store and manage UI-related data in a lifecycle conscious way. This ViewModel class allows data to survive configuration changes such as screen rotations. This layer depends on the Domain layer.
 * **Domain**- is the core of our application, that contains the business logic. It should not depend on how the data will be presented or where the data is coming from, as such,  this is the most inner part that has no dependencies to the outer layers. It defines Use Cases which define operations that can be performed. It is purely a Kotlin library with no Android dependencies. The domain calls for subscribing it's observers into the main UI thread, for this, I created an abstraction for the main thread that will be implemented in the UI module (via *AndroidSchedulers.mainThread*) so that the domain layer can be free of the Android framework
