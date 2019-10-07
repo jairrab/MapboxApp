@@ -19,7 +19,7 @@ The app requirements are very basic, but my objective is not to come up with the
 * The app downloads map geo information in JSON format from the internet.
 * The app stores this information on the local phone database for cache purposes.
 * The app also stores a timestamp of when this information was saved.
-* The geo information is displayed as a list inside a bottomsheet slider, shown with its distance/bearing to your current location. It is collapsed by default but can be expanded by sliding up (*screenshot B*)
+* The geo information is displayed as a list inside a `bottomsheet` slider panel, shown with its distance/bearing to your current location. It is collapsed by default but can be expanded by sliding up (*screenshot B*)
 * The geo list is also displayed in the Map using *location pin* icons with a text underneath that shows the item name.
 * Clicking on an item list causes the map to navigate to the item location.
 * Clicking on a pin icon shows the pin's description, GPS coordinates, and distance/bearing from your current location (*screenshot D*).
@@ -46,17 +46,12 @@ In general, this architecture is probably best described as an **MVVM pattern wi
 ## Use of reactive programming
 The app adopts principles of reactive programming through use of *observables* and *observers* and *schedulers*. For example, the presentation layer waits to be notified by the domain layer when a network call is made. The UI layer waits to be notified by `livedata` objects to display view changes. Many of this calls has to be performed asynchronously and schedulers helps with thread management, such as using RxJava's `observeOn` to tell observers which thread they should run on. My goal was to end up with a more cleaner, readable, and structured code base and this helped a lot.
 
-# App Operation
-* When the app is opened for the first time, it will ask the user to provide access to *location permission request*. This is required to detect and display the user's current location.
-   * If a user grants permission, the app navigates to the user's current location.
-   * If the user does not grant permission, it proceeds to the next step.
-* The app downloads map pins information from the internet.
-* if...
-
 # Libraries Used
 
 ## Dagger 2
-The app use Dagger with *AndroidInjector* module for dependency injection. The app module is responsible for the concrete creation of the Dagger objects outside of their own modules. The modules are organized into the following:
+The app use Dagger with *AndroidInjector* module for dependency injection. The app module is responsible for the concrete creation of the Dagger objects outside of their own modules. As a general practice, all dependencies are injected into classes, and object creation inside classes are avoided. This loose coupling approach also helps improve the testability of the app.
+
+The modules are organized into the following:
 * *AppModule* - Responsible for creating application context dependent objects, such as SharedPreferences
 * *CacheModule* - Responsible for creating the Room Database object, as well as the local database access object
 * *DataModule* - Responsible for creating the concrete implementaion of the data repository object defined on the domain layer
@@ -66,13 +61,60 @@ The app use Dagger with *AndroidInjector* module for dependency injection. The a
 * *ViewModelModule* - Responsible for concrete instantiation of ViewModel classes
 * *ViewModelFactoryModule* - responsible for creating the ViewModelFactory required to instantiate and inject dependencies into Android ViewModels
 ## Retrofit
- I am using Retrofit as client service to accessing server data. Retrofit makes it relatively easy to retrieve JSON via a REST based webservice. Although the actual Json data required for this app is very simple, using Retrofit allows the app to scale more convenienty as more data structures or server requests are required.
+ I am using Retrofit as client service to accessing server data. Retrofit makes it relatively easy to retrieve JSON via a REST based webservice. Although the actual Json data required for this app is very simple, using Retrofit allows the app to scale more convenienty as more data structures or server requests are required. There are 2 Retrofit clients on this app:
+ * Test Server client - for obtaining the geo location information that is displayed on the map and the slider panel
+ * Mapbox client - for obtaining Mapbox feature information for the detected user GPS coordinates.
 ## RxJava
-RxJava is used extensively for composing asynchronous calls to the remote/local data sources by using observable chains and sequences. In this app, using RxJava, a call is chained to: 
+RxJava is used extensively for composing asynchronous calls to the remote/local data sources by using observable chains and sequences. For instance, during the process of displaying a pre-defined list of geo-information to the user, the app implements the following flow: 
 * get data from the remote server
 * store the data into the local database
+* store the timestamp for the data into the local atabase
 * check the local database for the most recent location information during connectivity issues
+* if cached information is being used, also display how much time has elapsed since the test server was succesully queried.
 * notify the UI observers when the information is readily available, or an error has been detected
+
+The code below illustrates how RxJava observables are chained to implement the flow described above.
+```
+override fun getMapPoints(): Observable<MapInformation> {
+        return dataStore.getRemoteData(true).getMapPoints()
+            .map { list ->
+                MapInformation(
+                    mapPoints = list.map { mapper.mapToDomain(it) },
+                    source = Source.REMOTE,
+                    timeStamp = timeUtils.currentTime
+                )
+            }
+            .map { information ->
+                val list = information.mapPoints.map { mapper.mapToData(it) }
+
+                val updateLastLocationTimeStamp = dataStore.getRemoteData(false)
+                    .updateLastLocationTimeStamp(information.timeStamp)
+
+                dataStore.getRemoteData(false)
+                    .saveMapPoints(list)
+                    .andThen(updateLastLocationTimeStamp)
+                    .andThen(Observable.just(information))
+            }
+            .onErrorResumeNext { t: Throwable ->
+                Observable.zip(
+                    dataStore.getRemoteData(false).getLastLocationTimeStamp(),
+                    dataStore.getRemoteData(false).getMapPoints(),
+                    BiFunction<Long, List<MapPointData>, Pair<Long, List<MapPointData>>> { t1, t2 ->
+                        Pair(t1, t2)
+                    })
+                    .map { pair ->
+                        Observable.just(
+                            MapInformation(
+                                mapPoints = pair.second.map { mapper.mapToDomain(it) },
+                                source = Source.CACHE,
+                                timeStamp = pair.first
+                            )
+                        )
+                    }
+            }
+            .flatMap { it }
+    }
+```
 ## LeakCanary
 LeakCanary was used to detect and anticipate potential memory leaks. The app yielded 0% memory leaks through extensive debug testing.
 ## Android Jetpack
