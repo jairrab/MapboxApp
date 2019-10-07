@@ -102,14 +102,14 @@ class MapControllerViewModel @Inject constructor(
     }
 
     fun getCurrentLocation(lastLocation: Location) {
-        _progressBarVisibility.value = true
+        setGpsScanningIndicatorVisiblity(true)
 
         getLocationQuery.execute(object : DisposableObserver<LocationFeature>() {
             override fun onComplete() {
+                setGpsScanningIndicatorVisiblity(false)
             }
 
             override fun onNext(t: LocationFeature) {
-                _progressBarVisibility.value = false
                 _currentLocationName.value = t.place_name
             }
 
@@ -118,5 +118,9 @@ class MapControllerViewModel @Inject constructor(
             }
 
         }, Pair(lastLocation.latitude, lastLocation.longitude))
+    }
+
+    fun setGpsScanningIndicatorVisiblity(visible:Boolean){
+        _progressBarVisibility.value = visible
     }
 }

@@ -118,6 +118,7 @@ internal class ViewLocation @Inject constructor(
         mapboxMap.style?.let { style ->
             if (context == null) return
 
+
             // Get an instance of the component
             val locationComponent = mapboxMap.locationComponent
 
@@ -142,6 +143,7 @@ internal class ViewLocation @Inject constructor(
             this.flyToLocation = flyToLocation
 
             if (flyToLocation) {
+                viewModel.setGpsScanningIndicatorVisiblity(true)
                 requestLocationUpdate()
             }
         }
