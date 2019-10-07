@@ -56,6 +56,7 @@ class MainMapView : BaseFragment() {
             currentLocationName.observe(viewLifecycleOwner, Observer {
                 binding.currentLocationNameTv.text = it
                 binding.currentLocationNameTv.visibility = View.VISIBLE
+                helper.list.updateRecyclerView(binding.recyclerview)
             })
 
             currentLocationGps.observe(viewLifecycleOwner, Observer {
@@ -94,9 +95,6 @@ class MainMapView : BaseFragment() {
                 binding.mapView.visibility = View.VISIBLE
 
                 mapboxMap = it
-
-                /*mapboxMap?.uiSettings?.setCompassMargins(0,
-                    20f.convertToPixel().toInt(), 20f.convertToPixel().toInt(), 0)*/
 
                 this@MainMapView.viewModel.downloadLocations()
 

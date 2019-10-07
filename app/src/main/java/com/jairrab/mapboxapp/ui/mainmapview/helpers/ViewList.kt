@@ -17,4 +17,12 @@ internal class ViewList @Inject constructor(
         recyclerAdapter.mapPoints = mapPoints
         recyclerView.adapter = recyclerAdapter
     }
+
+    fun updateRecyclerView(recyclerView: RecyclerView) {
+        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        recyclerAdapter.notifyItemRangeChanged(
+            layoutManager.findFirstVisibleItemPosition(),
+            layoutManager.findLastVisibleItemPosition()
+        )
+    }
 }
