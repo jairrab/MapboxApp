@@ -52,7 +52,7 @@ The app adopts principles of reactive programming through use of *observables* a
 Used to download street maps, feature information for the user's current location and plotting a list of geolocation information inside the map.
 
 ## Dagger 2
-The app use Dagger with *AndroidInjector* module for dependency injection. The app module is responsible for the concrete creation of the Dagger objects outside of their own modules. As a general practice, all dependencies are injected into classes, and object creation inside classes are avoided. This loose coupling approach also helps improve the testability of the app.
+The app use Dagger with *AndroidInjector* module for dependency injection. The app module is responsible for the concrete creation of the Dagger objects outside of their own modules. As a general practice, all dependencies are injected into classes. That is, classes should have specific responsibilities and not be responsible for creating it's own dependencies. This loose coupling approach also helps improve the testability of the app.
 
 The modules are organized into the following:
 * *AppModule* - Responsible for creating application context dependent objects, such as SharedPreferences
