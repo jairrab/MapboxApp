@@ -11,6 +11,7 @@ import com.jairrab.mapboxapp.R
 import com.jairrab.mapboxapp.databinding.MyFragmentBinding
 import com.jairrab.mapboxapp.ui.BaseFragment
 import com.jairrab.mapboxapp.ui.mainmapview.helpers.ViewHelper
+import com.jairrab.mapboxapp.ui.utils.setIsVisible
 import com.jairrab.presentation.MapControllerViewModel
 import com.jairrab.presentation.eventobserver.EventObserver
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -32,64 +33,15 @@ class MainMapView : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        lifecycle.addObserver(helper.map)
-
-        binding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate<MyFragmentBinding>(
             layoutInflater, R.layout.my_fragment,
             container, false
-        )
-
-        viewModel.run {
-            mapInformationResponse.observe(viewLifecycleOwner, Observer { information ->
-                helper.map.updateMap(binding.offlineTv, mapboxMap, information)
-                helper.list.setupRecyclerView(binding.recyclerview, information.mapPoints)
-            })
-
-            listItemClick.observe(viewLifecycleOwner, Observer {
-                helper.map.onListItemClicked(it)
-            })
-
-            currentLocationMarker.observe(viewLifecycleOwner, Observer {
-                helper.location.updateLocationMarker(it, mapboxMap)
-            })
-
-            currentLocationName.observe(viewLifecycleOwner, Observer {
-                binding.currentLocationNameTv.text = it
-                binding.currentLocationNameTv.visibility = View.VISIBLE
-                helper.list.updateRecyclerView(binding.recyclerview)
-            })
-
-            currentLocationGps.observe(viewLifecycleOwner, Observer {
-                binding.currentLocationGpsTv.text = it
-                binding.currentLocationGpsTv.visibility = View.VISIBLE
-                binding.currentLocationLabelTv.visibility = View.VISIBLE
-            })
-
-            lastLocation.observe(viewLifecycleOwner, Observer {
-                helper.location.getLastLocation(mapboxMap)
-            })
-
-            gpsFlasher.observe(viewLifecycleOwner, EventObserver {
-                @Suppress("ConstantConditionIf")
-                if (!ENABLE_LAT_LONG_FLASHER) return@EventObserver
-                lifecycleScope.launch {
-                    helper.map.flashCoordinatesDisplay(binding.latLongTv, it)
-                }
-            })
-
-            locationFlyer.observe(viewLifecycleOwner, Observer {
-                helper.map.flyToLocation(it, mapboxMap)
-            })
-
-            bottomSheetState.observe(viewLifecycleOwner, Observer {
-                helper.slider.setState(it)
-            })
-        }
-
-        binding.run {
+        ).apply {
             viewModel = this@MainMapView.viewModel
 
             mapView.onCreate(savedInstanceState)
+
+            helper.slider.setup(bottomSheet)
 
             helper.map.setup(mapView) {
                 binding.mapView.visibility = View.VISIBLE
@@ -105,9 +57,64 @@ class MainMapView : BaseFragment() {
                 )
             }
 
-            helper.slider.setup(bottomSheet)
+            setupViewObservers()
+        }
 
-            return root
+        return binding.root
+    }
+
+    private fun MyFragmentBinding.setupViewObservers() {
+        lifecycle.addObserver(helper.map)
+
+        this@MainMapView.viewModel.run {
+            mapInformationResponse.observe(viewLifecycleOwner, Observer { information ->
+                helper.map.updateMap(offlineTv, mapboxMap, information)
+                helper.list.setupRecyclerView(recyclerview, information.mapPoints)
+            })
+
+            listItemClick.observe(viewLifecycleOwner, Observer {
+                helper.map.onListItemClicked(it)
+            })
+
+            currentLocationMarker.observe(viewLifecycleOwner, Observer {
+                helper.location.updateLocationMarker(it, mapboxMap)
+            })
+
+            progressBarVisibility.observe(viewLifecycleOwner, Observer {
+                progressBar.setIsVisible(it)
+            })
+
+            currentLocationName.observe(viewLifecycleOwner, Observer {
+                currentLocationNameTv.text = it
+                currentLocationNameTv.visibility = View.VISIBLE
+                helper.list.updateRecyclerView(recyclerview)
+            })
+
+            currentLocationGps.observe(viewLifecycleOwner, Observer {
+                currentLocationGpsTv.text = it
+                currentLocationGpsTv.visibility = View.VISIBLE
+                currentLocationLabelTv.visibility = View.VISIBLE
+            })
+
+            lastLocation.observe(viewLifecycleOwner, Observer {
+                helper.location.getLastLocation(mapboxMap)
+            })
+
+            gpsFlasher.observe(viewLifecycleOwner, EventObserver {
+                @Suppress("ConstantConditionIf")
+                if (!ENABLE_LAT_LONG_FLASHER) return@EventObserver
+                lifecycleScope.launch {
+                    helper.map.flashCoordinatesDisplay(latLongTv, it)
+                }
+            })
+
+            locationFlyer.observe(viewLifecycleOwner, Observer {
+                helper.map.flyToLocation(it, mapboxMap)
+            })
+
+            bottomSheetState.observe(viewLifecycleOwner, Observer {
+                helper.slider.setState(it)
+            })
         }
     }
 

@@ -26,6 +26,9 @@ class MapControllerViewModel @Inject constructor(
     private val _currentLocationName = MutableLiveData<String>()
     val currentLocationName: LiveData<String> = _currentLocationName
 
+    private val _progressBarVisibility = MutableLiveData<Boolean>()
+    val progressBarVisibility: LiveData<Boolean> = _progressBarVisibility
+
     private val _currentLocationMarker = MutableLiveData<Location>()
     val currentLocationMarker: LiveData<Location> = _currentLocationMarker
 
@@ -99,11 +102,14 @@ class MapControllerViewModel @Inject constructor(
     }
 
     fun getCurrentLocation(lastLocation: Location) {
+        _progressBarVisibility.value = true
+
         getLocationQuery.execute(object : DisposableObserver<LocationFeature>() {
             override fun onComplete() {
             }
 
             override fun onNext(t: LocationFeature) {
+                _progressBarVisibility.value = false
                 _currentLocationName.value = t.place_name
             }
 
